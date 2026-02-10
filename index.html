@@ -1,276 +1,422 @@
-
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Scrolling Nav - Start Bootstrap Template</title>
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdn.amplitude.com/script/383a067bf6e6a9ff502156492a2bdeb8.experiment.js"></script>
-        
-        <!-- incude session replay script -->
-        <script src="https://cdn.amplitude.com/libs/session-replay-browser-1.13.1-min.js.gz"></script>
-        
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Landing Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
 
-        <script>
+        /* Header */
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-            //Set sessionID
-            const sessionID = Date.now(); // Unix timestamp in milliseconds
-            console.log( "sessionID :: " + sessionID );
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
 
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1.5rem;
+        }
 
-            //Set deviceID
-            const deviceID = uuidv4();
-            function uuidv4() {
-                    return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
-                        (+c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16)
-                    );
-                    }
-            console.log("deviceID :: " + deviceID);
+        nav a:hover {
+            text-decoration: underline;
+        }
 
-             
-           
+        /* Banner */
+        .banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
 
-       
-        </script>
+        .banner h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
 
-        <script>
+        .banner p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
 
-        //document ready
-        $( document ).ready(function() {
-        console.log( "ready!" );
+        /* Products Section */
+        .products {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        const sessionReplaysetup = setupsessionReplay (deviceID,sessionID);
-        const sessionReplayProps = sessionReplayProperties ();
+        .products h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
 
-        //log a pageView
-        pageViewed();
-        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-card h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .product-card .price {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .modal .icon {
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .modal .price {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .modal .description {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .modal button.add-to-cart {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .modal button.add-to-cart:hover {
+            background: #5a6fd6;
+        }
+    </style>
+
+<script type="text/javascript">
+    !function(){"use strict";window.RudderSnippetVersion="3.2.0";var e="rudderanalytics";window[e]||(window[e]=[])
+    ;var rudderanalytics=window[e];if(Array.isArray(rudderanalytics)){
+    if(true===rudderanalytics.snippetExecuted&&window.console&&console.error){
+    console.error("RudderStack JavaScript SDK snippet included more than once.")}else{rudderanalytics.snippetExecuted=true,
+    window.rudderAnalyticsBuildType="legacy";var sdkBaseUrl="https://cdn.rudderlabs.com";var sdkVersion="v3"
+    ;var sdkFileName="rsa.min.js";var scriptLoadingMode="async"
+    ;var r=["setDefaultInstanceKey","load","ready","page","track","identify","alias","group","reset","setAnonymousId","startSession","endSession","consent","addCustomIntegration"]
+    ;for(var n=0;n<r.length;n++){var t=r[n];rudderanalytics[t]=function(r){return function(){var n
+    ;Array.isArray(window[e])?rudderanalytics.push([r].concat(Array.prototype.slice.call(arguments))):null===(n=window[e][r])||void 0===n||n.apply(window[e],arguments)
+    }}(t)}try{
+    new Function('class Test{field=()=>{};test({prop=[]}={}){return prop?(prop?.property??[...prop]):import("");}}'),
+    window.rudderAnalyticsBuildType="modern"}catch(i){}var d=document.head||document.getElementsByTagName("head")[0]
+    ;var o=document.body||document.getElementsByTagName("body")[0];window.rudderAnalyticsAddScript=function(e,r,n){
+    var t=document.createElement("script");t.src=e,t.setAttribute("data-loader","RS_JS_SDK"),r&&n&&t.setAttribute(r,n),
+    "async"===scriptLoadingMode?t.async=true:"defer"===scriptLoadingMode&&(t.defer=true),
+    d?d.insertBefore(t,d.firstChild):o.insertBefore(t,o.firstChild)},window.rudderAnalyticsMount=function(){!function(){
+    if("undefined"==typeof globalThis){var e;var r=function getGlobal(){
+    return"undefined"!=typeof self?self:"undefined"!=typeof window?window:null}();r&&Object.defineProperty(r,"globalThis",{
+    value:r,configurable:true})}
+    }(),window.rudderAnalyticsAddScript("".concat(sdkBaseUrl,"/").concat(sdkVersion,"/").concat(window.rudderAnalyticsBuildType,"/").concat(sdkFileName),"data-rsa-write-key","39FfYUic2bfONaLGGZy4zwPeiwa")
+    },
+    "undefined"==typeof Promise||"undefined"==typeof globalThis?window.rudderAnalyticsAddScript("https://polyfill-fastly.io/v3/polyfill.min.js?version=3.111.0&features=Symbol%2CPromise&callback=rudderAnalyticsMount"):window.rudderAnalyticsMount()
+    ;var loadOptions={};rudderanalytics.load("39FfYUic2bfONaLGGZy4zwPeiwa","https://numeroboywfsuo.dataplane.rudderstack.com",loadOptions)}}}();
+  </script>
+
+  <script src="https://cdn.amplitude.com/libs/session-replay-browser-1.30.9-min.js.gz"></script>
+  <script>
+    (function () {
+      var AMPLITUDE_API_KEY = "383a067bf6e6a9ff502156492a2bdeb8";
+      // Wait until RudderStack is fully initialized
+      rudderanalytics.ready(function () {
+        // Get IDs from RudderStack
+        var deviceId = rudderanalytics.getAnonymousId();
+        // If your RudderStack version doesn’t have getSessionId, fallback to your own
+        var sessionId =
+          typeof rudderanalytics.getSessionId === "function"
+            ? rudderanalytics.getSessionId()
+            : Date.now(); // simple fallback
+
+        console.log("Initializing Session Replay with:", {
+          deviceId: deviceId,
+          sessionId: sessionId
         });
 
-        async function setupsessionReplay (deviceID, sessionID)
-                {
+        // Initialize Session Replay Standalone SDK
+        window.sessionReplay
+          .init(AMPLITUDE_API_KEY, {
+            deviceId: deviceId,    // maps to Amplitude device_id
+            sessionId: sessionId,  // maps to Amplitude session_id
+            sampleRate: 1,       // capture 100% of sessions; tune as needed
+            optOut: false
+          })
+          .promise
+          .then(function () {
+            console.log("Session Replay initialized");
+          })
+          .catch(function (err) {
+            console.error("Session Replay init error", err);
+          });
 
-                    const AMPLITUDE_API_KEY = "d295823335fc72a1643e2735ef16ce2e"
+        // OPTIONAL: enrich RudderStack events with Session Replay properties
+        // This adds [Amplitude] Session Replay ID etc to your events (useful for debugging).
+        var originalTrack = rudderanalytics.track.bind(rudderAnalytics);
+        rudderanalytics.track = function (event, properties, options, callback) {
+          properties = properties || {};
+          var srProps = window.sessionReplay.getSessionReplayProperties() || {};
+          properties = merge(properties, srProps);
+          return originalTrack(event, properties, options, callback);
+        };
 
-                    // Configure the SDK and begin collecting replays
-                    console.log ("initialise session replay");
-                   await sessionReplay.init(AMPLITUDE_API_KEY, {
-                    deviceId: deviceID,
-                    sessionId: sessionID,
-                    }).promise;
+        var originalPage = rudderanalytics.page.bind(rudderAnalytics);
+        rudderanalytics.page = function (category, name, properties, options, callback) {
+          // Handle different Rudder argument patterns in a simple way
+          if (typeof category === "string" && typeof name !== "string") {
+            properties = name || {};
+            name = category;
+            category = undefined;
+          }
+          properties = properties || {};
+          var srProps = window.sessionReplay.getSessionReplayProperties() || {};
+          properties = merge(properties, srProps);
 
-                    console.log(JSON.stringify(sessionReplay.getSessionReplayProperties()));
-                    const sessionReplaypropsJson = $.parseJSON(JSON.stringify(sessionReplay.getSessionReplayProperties()));                    
-                    console.log(sessionReplaypropsJson['[Amplitude] Session Replay ID']);
-
-                }
-
-                function sessionReplayProperties ()
-                {
-                    const sessionReplayProperties = sessionReplay.getSessionReplayProperties();
-                    return sessionReplayProperties;
-                }
-
-
-
-        async function aboutclicked()
-        {
-            console.log("about clicked");
-
-            console.log(JSON.stringify(sessionReplay.getSessionReplayProperties()));
-            const sessionReplaypropsJson = $.parseJSON(JSON.stringify(sessionReplay.getSessionReplayProperties()));
-            console.log(sessionReplaypropsJson['[Amplitude] Session Replay ID']);
-
-            const sampleEvent = {
-
-                                "api_key": "d295823335fc72a1643e2735ef16ce2e",
-                                "events": [
-                                {
-
-                                "device_id": deviceID,
-                                "session_id": sessionID,
-                                "event_type": "About Clicked",
-                                "event_properties": {
-                                        "prop1" : "prop1ValueTwo",
-                                        "[Amplitude] Session Replay ID": sessionReplaypropsJson['[Amplitude] Session Replay ID']
-                                    }
-      
-                               }
-                                            ]
-                                 }
-
-            const response = await fetch('https://api.amplitude.com/2/httpapi', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-                },
-                body: JSON.stringify(sampleEvent),
-            })
-
-            console.log('status:', response.status);
-            
-        }
-
-
-        async function servicesClicked()
-        {
-            console.log("services clicked");
-
-            console.log(JSON.stringify(sessionReplay.getSessionReplayProperties()));
-            const sessionReplaypropsJson = $.parseJSON(JSON.stringify(sessionReplay.getSessionReplayProperties()));
-            console.log(sessionReplaypropsJson['[Amplitude] Session Replay ID']);
-            
-            const sampleEvent = {
-
-                                "api_key": "d295823335fc72a1643e2735ef16ce2e",
-                                "events": [
-                                {
-
-                                "device_id": deviceID,
-                                "session_id": sessionID,
-                                "event_type": "Services Clicked",
-                                "event_properties": {
-                                        "prop1" : "prop1ValueTwo",
-                                        "[Amplitude] Session Replay ID": sessionReplaypropsJson['[Amplitude] Session Replay ID']
-                                    }
-      
-                               }
-                                            ]
-                                 }
-
-            const response = await fetch('https://api.amplitude.com/2/httpapi', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-                },
-                body: JSON.stringify(sampleEvent),
-            })
-
-            console.log('status:', response.status);
-            
-        }
-
-
-        // Page Viewed
-
-        async function pageViewed()
-        {
-            console.log("Page Viewed");
-
-            console.log(JSON.stringify(sessionReplay.getSessionReplayProperties()));
-            const sessionReplaypropsJson = $.parseJSON(JSON.stringify(sessionReplay.getSessionReplayProperties()));
-            console.log(sessionReplaypropsJson['[Amplitude] Session Replay ID']);
-            
-            const sampleEvent = {
-
-                                "api_key": "d295823335fc72a1643e2735ef16ce2e",
-                                "events": [
-                                {
-
-                                "device_id": deviceID,
-                                "session_id": sessionID,
-                                "event_type": "Page Viewed",
-                                "event_properties": {
-                                        "pageName" : "Demo",
-                                        "[Amplitude] Session Replay ID": sessionReplaypropsJson['[Amplitude] Session Replay ID']
-                                    }
-      
-                               }
-                                            ]
-                                 }
-
-            const response = await fetch('https://api.amplitude.com/2/httpapi', {
-                method: 'POST',
-                headers: {
-                'Content-Type': 'application/json; charset=utf-8'
-                },
-                body: JSON.stringify(sampleEvent),
-            })
-
-            console.log('status:', response.status);
-            
-        }
-            
-        </script>
-
-
-    </head>
-    <body id="page-top">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-            <div class="container px-4">
-                <a class="navbar-brand" href="#page-top">Start Bootstrap</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="#about" id="menuAbout" onclick="aboutclicked()">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#services" id="menuServices" onclick="servicesClicked()">Services</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#contact" id="menuContact" onclick="contactClicked()">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
+          return originalPage(category, name, properties, options, callback);
+        };
+      });
+    })();
+</script>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">MyShop</div>
+        <nav>
+            <a href="#" onclick="trackMenuClick('Home')">Home</a>
+            <a href="#" onclick="trackMenuClick('Products')">Products</a>
+            <a href="#" onclick="trackMenuClick('About')">About</a>
+            <a href="#" onclick="trackMenuClick('Contact')">Contact</a>
         </nav>
-        <!-- Header-->
-        <header class="bg-primary bg-gradient text-white">
-            <div class="container px-4 text-center">
-                <h1 class="fw-bolder">Welcome to Scrolling Nav</h1>
-                <p class="lead">A functional Bootstrap 5 boilerplate for one page scrolling websites</p>
-                <a class="btn btn-lg btn-light" href="#about" onclick="scrollbuttonClicked()">Start scrolling!</a>
+    </header>
+
+    <!-- Banner -->
+    <section class="banner">
+        <h1>Welcome to MyShop</h1>
+        <p>Discover amazing products at great prices</p>
+    </section>
+
+    <!-- Products -->
+    <section class="products">
+        <h2>Our Products</h2>
+        <div class="product-grid">
+            <div class="product-card" onclick="openModal('laptop')">
+                <div class="icon">💻</div>
+                <h3>Laptop Pro</h3>
+                <p class="price">$999</p>
             </div>
-        </header>
-        <!-- About section-->
-        <section id="about">
-            <div class="container px-4">
-                <div class="row gx-4 justify-content-center">
-                    <div class="col-lg-8">
-                        <h2>About this page</h2>
-                        <p class="lead">This is a great place to talk about your webpage. This template is purposefully unstyled so you can use it as a boilerplate or starting point for you own landing page designs! This template features:</p>
-                        <ul>
-                            <li>Clickable nav links that smooth scroll to page sections</li>
-                            <li>Responsive behavior when clicking nav links perfect for a one page website</li>
-                            <li>Bootstrap's scrollspy feature which highlights which section of the page you're on in the navbar</li>
-                            <li>Minimal custom CSS so you are free to explore your own unique design options</li>
-                        </ul>
-                    </div>
-                </div>
+            <div class="product-card" onclick="openModal('headphones')">
+                <div class="icon">🎧</div>
+                <h3>Wireless Headphones</h3>
+                <p class="price">$199</p>
             </div>
-        </section>
-        <!-- Services section-->
-        <section class="bg-light" id="services">
-            <div class="container px-4">
-                <div class="row gx-4 justify-content-center">
-                    <div class="col-lg-8">
-                        <h2>Services we offer</h2>
-                        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut optio velit inventore, expedita quo laboriosam possimus ea consequatur vitae, doloribus consequuntur ex. Nemo assumenda laborum vel, labore ut velit dignissimos.</p>
-                    </div>
-                </div>
+            <div class="product-card" onclick="openModal('watch')">
+                <div class="icon">⌚</div>
+                <h3>Smart Watch</h3>
+                <p class="price">$299</p>
             </div>
-        </section>
-        <!-- Contact section-->
-        <section id="contact">
-            <div class="container px-4">
-                <div class="row gx-4 justify-content-center">
-                    <div class="col-lg-8">
-                        <h2>Contact us</h2>
-                        <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero odio fugiat voluptatem dolor, provident officiis, id iusto! Obcaecati incidunt, qui nihil beatae magnam et repudiandae ipsa exercitationem, in, quo totam.</p>
-                    </div>
-                </div>
+            <div class="product-card" onclick="openModal('camera')">
+                <div class="icon">📷</div>
+                <h3>Digital Camera</h3>
+                <p class="price">$599</p>
             </div>
-        </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 MyShop. All rights reserved.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="icon" id="modalIcon"></div>
+            <h3 id="modalTitle"></h3>
+            <p class="price" id="modalPrice"></p>
+            <p class="description" id="modalDescription"></p>
+            <button class="add-to-cart">Add to Cart</button>
+        </div>
+    </div>
+
+    <script>
+        // Track page view on load
+        rudderanalytics.page('Home');
+
+        // Track menu click events
+        function trackMenuClick(menuItem) {
+            rudderanalytics.track('Menu Clicked', {
+                menu_item: menuItem
+            });
+        }
+
+        const products = {
+            laptop: {
+                icon: '💻',
+                title: 'Laptop Pro',
+                price: '$999',
+                description: 'Powerful laptop with 16GB RAM, 512GB SSD, and a stunning 15-inch Retina display. Perfect for work and play.'
+            },
+            headphones: {
+                icon: '🎧',
+                title: 'Wireless Headphones',
+                price: '$199',
+                description: 'Premium noise-canceling headphones with 30-hour battery life and crystal-clear audio quality.'
+            },
+            watch: {
+                icon: '⌚',
+                title: 'Smart Watch',
+                price: '$299',
+                description: 'Track your fitness, receive notifications, and stay connected with this sleek and stylish smartwatch.'
+            },
+            camera: {
+                icon: '📷',
+                title: 'Digital Camera',
+                price: '$599',
+                description: '24MP mirrorless camera with 4K video recording and advanced autofocus for stunning photos and videos.'
+            }
+        };
+
+        function openModal(productId) {
+            const product = products[productId];
+            
+            // Track product tile click
+            rudderanalytics.track('Product Tile Clicked', {
+                product_id: productId,
+                product_name: product.title,
+                product_price: product.price
+            });
+
+            document.getElementById('modalIcon').textContent = product.icon;
+            document.getElementById('modalTitle').textContent = product.title;
+            document.getElementById('modalPrice').textContent = product.price;
+            document.getElementById('modalDescription').textContent = product.description;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('modalOverlay')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
 </html>
+
